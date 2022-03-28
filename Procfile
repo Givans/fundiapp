@@ -1,0 +1,1 @@
+web gunicorn petrol.wsgi:application --log-file -

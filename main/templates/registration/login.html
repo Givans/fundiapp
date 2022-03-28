@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+  <title>Kitui County Council</title>
+  <link rel="icon" href="{% static 'images/login.png' %}">
+  <link rel="stylesheet" href="{% static 'vendor/bootstrap/css/bootstrap.css' %}">
+  <style>
+input[type=text], input[type=password] {
+    width: 50%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input[type=submit] {
+    width: 50%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+input[type=submit]:hover {
+    background-color: #45a049;
+}
+
+.form {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 20px;
+}
+.errors{
+  color: red;
+  background-color: #0001;
+}
+</style>
+
+</head>
+<body>
+<br><br>
+    <div class="row text-center">
+             <div class="col-md-3"></div>
+             <div class="col-md-6">
+
+                 {% for message in messages %}
+            <div class="container-fluid p-0">
+              <div class="alert {{ message.tags }} alert-dismissible fade show" role="alert" >
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                {{ message }}
+              </div>
+            </div>
+            {% endfor %}
+             </div>
+             <div class="col-md-3"></div>
+          </div>
+<br><br>
+<div class="container text-center">
+  <h4><b>Welcome!!! Kindly Login</b></h4>
+</div>
+
+<div class="container text-center form">
+  <form method="POST" action="{% url 'login' %}">
+    {% csrf_token %}
+    <div class="form-group">
+      {{ form.username.label_tag }}
+      {{ form.username }}
+    </div>
+
+    <div class="form-group">
+      {{ form.password.label_tag }}
+      {{ form.password }}
+
+    </div>
+      <div class="errors text-center">
+            {{ form.errors }}
+      </div>
+
+    <input type="submit" value="Login">
+  </form>
+    <br>
+    <p>dont have an account: <a href="" data-bs-toggle="modal" data-bs-target="#signup">SignUp</a></p>
+</div>
+
+     <!--  signup modal-->
+<div class="modal fade" id="signup" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Sign Up</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+
+            <p>You can delete the account whenever you want</p>
+              <form action="/signup" method="POST" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  <div class="row mb-3">
+                      <div class="col-sm-2">
+                          <button class="btn btn-secondary">Names</button>
+                      </div>
+                    <div class="col-sm-4 py-2 wow fadeInLeft form-group" >
+                        <label>First Name</label>
+                        <input type="text" name="firstname" class="form-control" placeholder="..." required>
+                        <div class="valid-feedback">Valid.</div>
+                        <div class="invalid-feedback">Valid first name as per id is required.</div>
+                    </div>
+                    <div class="col-sm-4 py-2 wow fadeInLeft form-group" >
+                        <label>Other Names</label>
+                        <input type="text" name="lastname" class="form-control" placeholder="..." required>
+                        <div class="valid-feedback">Valid.</div>
+                        <div class="invalid-feedback">Your sir name is required.</div>
+                    </div>
+
+                  </div>
+                  <div class="row mb-3">
+                      <div class="col-sm-2">
+                          <button class="btn btn-secondary">Unique</button>
+                      </div>
+                      <div class="col-sm-4 py-2 wow fadeInLeft form-group" >
+                        <label>Username </label>
+                        <input type="text" maxlength="25" name="username" class="form-control" placeholder="..." required>
+                        <div class="valid-feedback">Valid.</div>
+                        <div class="invalid-feedback">Valid ad unique username is required.</div>
+                    </div>
+                      <div class="col-sm-4 py-2 wow fadeInLeft form-group" >
+                        <label>email</label>
+                        <input type="email" name="email" class="form-control" placeholder="..." required>
+                        <div class="valid-feedback">Valid.</div>
+                        <div class="invalid-feedback">A valid email is required.</div>
+                    </div>
+
+                  </div>
+                  <div class="row mb-3">
+                      <div class="col-sm-2">
+                          <button class="btn btn-secondary">Shipping</button>
+                      </div>
+                    <div class="col-sm-3 py-2 wow fadeInLeft form-group" >
+                        <label>address</label>
+                        <input type="text" name="location" class="form-control" placeholder="...">
+                        <div class="valid-feedback">Valid.</div>
+                        <div class="invalid-feedback">This Location is required.</div>
+                    </div>
+                      <div class="col-sm-4 py-2 wow fadeInLeft form-group" >
+                        <label>Phone </label>
+                        <input type="number" maxlength="12" name="phone" class="form-control" placeholder="254" required>
+                          <small>begin with 2547</small>
+                        <div class="valid-feedback">Valid.</div>
+                        <div class="invalid-feedback">Valid ad unique username is required.</div>
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                      <div class="col-sm-2">
+                          <button class="btn btn-secondary">Other info</button>
+                      </div>
+                    <div class="col-sm-3 py-2 wow fadeInLeft form-group" >
+                        <label>Gender</label>
+                        <div class="row">
+                            <div class="col-md-3">
+                                male
+                                <br>
+                                <input type="radio" value="male" name="gender" required>
+                            </div>
+                            <div class="col-md-3">
+                                female
+                                <br>
+                                <input type="radio" value="female" name="gender" required>
+                            </div>
+                            <div class="col-md-3">
+                                other
+                                <br>
+                                <input type="radio" value="Transgender" name="gender" required>
+                            </div>
+                            <div class="col-md-3"></div>
+                        </div>
+                        <div class="valid-feedback">Valid.</div>
+                        <div class="invalid-feedback">The gender is required.</div>
+                    </div>
+                      <div class="col-sm-3 py-2 wow fadeInLeft form-group" >
+                          <label>Profile Pic</label>
+                        <input type="file" name="pic" class="form-control" id="" placeholder="profile picture">
+                        <div class="valid-feedback">Valid.</div>
+                        <div class="invalid-feedback">Valid Profile Picture is required.</div>
+                      </div>
+                  </div>
+                  <div class="row mb-3">
+                      <div class="col-sm-2">
+                          <button class="btn btn-secondary">Authenticate</button>
+                      </div>
+                      <div class="col-sm-5 py-2 wow fadeInLeft form-group" >
+                        <label>Password</label>
+                        <input type="password" name="password" class="form-control" placeholder="password" required>
+                        <div class="valid-feedback">Valid.</div>
+                        <div class="invalid-feedback">Valid Password is required.</div>
+                    </div>
+                      <div class="col-sm-5 py-2 wow fadeInLeft form-group" >
+                        <label>Confirm Password</label>
+                          <input type="password" class="form-control" name="password2" placeholder="Repeat password" required>
+                        <div class="valid-feedback">Valid.</div>
+                        <div class="invalid-feedback">The passwords must be the same.</div>
+                    </div>
+
+                  </div>
+                <div class="form-group text-center">
+                <input type="submit" value="Register Now" name="submit" class="btn btn-sm btn-primary">
+                </div>
+              </form>
+
+        </div>
+      </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
+        </div>
+    </div>
+  </div>
+</div>
+<!--     end signup modal-->
+
+</body>
+  <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+</html>

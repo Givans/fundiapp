@@ -1,0 +1,292 @@
+{% extends 'main.html' %}
+{% block content %}
+{% load static %}
+<main id="main">
+
+
+
+     <!-- Modal portfolio-->
+<div class="modal fade" id="portfolio" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Update portfolio</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+      <form action="portfolio" method="post" role="form" enctype="multipart/form-data">
+        {% csrf_token %}
+          <div class="modal-body">
+             <div class="form-group">
+               <label for="to">Project Title: </label>
+                <input class="form-control" id="title" name="title" required>
+              </div>
+            <div class="form-group">
+                <label for="description">Description: </label>
+                <textarea class="form-control" id="description" name="description" rows="5" required></textarea>
+              </div>
+            <div class="form-group">
+               <label for="Location">Location: </label>
+              <input type="url" class="form-control" id="location" name="url">
+            </div>
+            <div class="form-group">
+               <label>Category: </label>
+              <br>
+
+              <label>Web</label>
+              <input type="radio" name="category" value="web">
+              <br>
+              <label>app</label>
+              <input type="radio" name="category" value="app">
+              <br>
+              <label>card</label>
+              <input type="radio" name="category" value="card">
+            </div>
+            <hr>
+            <div class="form-group">
+               <label>status: </label>
+              <br>
+
+              <label>unfinished</label>
+              <input type="radio" name="status" checked value="unfinished" required>
+              <br>
+              <label>finished</label>
+              <input type="radio" name="status" value="finished" required>
+            </div>
+            <br>
+             <div class="form-group">
+               <label for="file">Image File: </label>
+              <input type="file" class="form-control" id="file" name="image" required>
+            </div>
+
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-sm btn-outline-primary">OK</button>
+          </div>
+      </form>
+        </div>
+
+    </div>
+  </div>
+</div>
+<!--     end of nodal portfolio-->
+
+         <!-- Modal users-->
+<div class="modal fade" id="users" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Registered Members</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        {% if user.is_superuser %}
+        {{users.username}}
+         {% for u in users %}
+  <hr>
+  <br>Name: {{ u.first_name }}
+  <br>username: {{ u.username }}
+  <br>email: {{ u.email }}
+  <br>Active: {{ u.is_active }}
+  <br>Admin: {{u.is_superuser}}
+        <br>Last Login: {{ u.last_login }}
+  {% endfor %}
+          {% else %}
+          <p>You are not authorized to view this page</p>
+          {% endif %}
+
+      </div>
+    </div>
+  </div>
+</div>
+<!--     end of modal users-->
+
+     <!-- Modal sent-->
+<div class="modal fade" id="sent" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Sent Emails</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <ul type=">>">
+          {% for reply in replies %}
+            <li>
+              <div class="row">
+                <div class="col-md-2">
+                  <div class="social-links mt-3 text-center">
+
+                    <b href="#" class="twitter">{{ reply.other }}</b>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <small><em>to: {{ reply.to }}</em></small>
+                </div>
+                <div class="col-md-5">
+                  <small>{{ reply.message }}</small>
+                  <small><em><b><br>{{reply.date}}</b></em></small>
+                </div>
+                <div class="col-md-2">
+                  <a href=""><img class="rotate" src="{% static 'images/delete.jpg' %}" alt=""></a>
+                </div>
+              </div>
+            </li>
+          <hr>
+          {% endfor %}
+        </ul>
+
+      </div>
+    </div>
+  </div>
+</div>
+<!--     end of nodal sent-->
+
+     <!-- Modal testimonial-->
+<div class="modal fade" id="testimonial" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Testimonials</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <section id="testimonials" class="testimonials section-bg">
+        <div class="testimonials-slider swiper" data-aos="fade-up" data-aos-delay="100">
+          <div class="swiper-wrapper">
+
+            {% for testimony in testimonials %}
+            <div class="swiper-slide">
+              <div class="testimonial-item" data-aos="fade-up">
+                <span><h3 class="btn btn-sm btn-secondary">
+                  Public: {{ testimony.public }}
+                </h3>
+                {% if testimony.approved %}
+                <button disabled class="btn btn-sm btn-warning">
+                  <input type="checkbox" checked>
+                  Approved</button>
+                <form action="approvetestimony/{{ testimony.id }}" method="post">
+                  {% csrf_token %}
+                  <input type="hidden" name="allow" value="{{ testimony.id }}">
+                  <button class="btn btn-sm btn-outline-danger" type="submit">Disapprove</button>
+                </form>
+                {% else %}
+                {% if testimony.public %}
+                <form action="approvetestimony/{{ testimony.id }}" method="post">
+                  {% csrf_token %}
+                  <input type="hidden" name="allow" value="{{ testimony.id }}">
+                  <button class="btn btn-sm btn-outline-danger" type="submit">Approve</button>
+                </form>
+                {% else %}
+                <button disabled class="btn btn-sm btn-warning">Private Testimony</button>
+                {% endif %}
+                {% endif %}
+                  </span>
+                <p>
+                  <i class="bx bxs-quote-alt-left quote-icon-left"></i>
+                  {{ testimony.other }}
+                  <i class="bx bxs-quote-alt-right quote-icon-right"></i>
+                </p>
+                <img src="{% static 'images/thanks.jpg' %}" class="testimonial-img" alt="">
+                <h3>{{ testimony.name }}</h3>
+                <h4>{{ testimony.major }}</h4>
+              </div>
+            </div>
+            {% endfor %}
+
+            <!-- End testimonial item -->
+          </div>
+        </div>
+        </section>
+
+      </div>
+    </div>
+  </div>
+</div>
+<!--     end of nodal testimonial-->
+
+
+
+      <!-- ======= Inbox Section ======= -->
+    <section id="inbox" class="inbox">
+      <div class="container mail">
+
+        <div class="section-title">
+          <h2>Received Mails</h2>
+          <p>
+            today's date: {{today}}
+          </p>
+        </div>
+
+
+        {% for mail in mails %}
+        <a href="" data-bs-toggle="modal" data-bs-target="#reply{{mail.id}}">
+
+      <div class="card">
+        <div class="row {{mail.read}}">
+          <div class="col-md-1"></div>
+          <div class="col-sm-4" data-aos="fade-right">
+            <button type="submit" class="btn btn-sm" data-toggle="tooltip" data-placement="top" title="{{ mail.email }}">
+              <p><small>{{ mail.name }}</small></p>
+            </button>
+          </div>
+          :
+          <div class="col-sm-6 pt-4 pt-lg-0 content" data-aos="fade-left">
+            <p>{{ mail.message }}</p>
+            <p><small>{{ mail.date }}</small></p>
+          </div>
+          <div class="col-md-1"></div>
+
+        </div>
+        </div>
+          </a>
+                       <!-- Modal reply-->
+<div class="modal fade" id="reply{{mail.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"> <small> Reply</small></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      <p class="inboxmessage"><i>{{ mail.message }}</i></p>
+
+      <form action="reply/{{mail.id}}" method="post" role="form">
+        {% csrf_token %}
+          <div class="modal-body">
+            <input type="hidden" id="note" name="note" value="{{mail.id}}">
+
+             <div class="form-group">
+               <label for="to">To: </label>
+               <input type="text" disabled value="{{ mail.email }}">
+                <input type="text" id="to" hidden name="to" value="{{mail.email}}">
+                <input hidden class="form-control" id="subject" name="subject" value="feedback on {{mail.subject}}" required>
+              </div>
+            <div class="form-group">
+                <label for="message">Message</label>
+                <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+              </div>
+
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-sm btn-outline-primary">Send to {{mail.name}}</button>
+          </div>
+      </form>
+        </div>
+    </div>
+  </div>
+</div>
+<!--     end of modal reply-->
+
+        {% endfor %}
+
+      </div>
+
+    </section>
+  <!-- End inbox Section -->
+  <br>
+</main>
+
+
+{% endblock %}
