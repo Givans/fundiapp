@@ -1,1 +1,1 @@
-web gunicorn petrol.wsgi:application --log-file -
+web gunicorn fundi.wsgi:application --log-file -
